@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Charts Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .card { padding: 16px; border: 1px solid #ddd; border-radius: 8px; }
+    h2 { margin: 0 0 12px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <div class="grid">
+    <div class="card">
+      <h2>Employees per Department</h2>
+      <canvas id="deptChart" height="120"></canvas>
+    </div>
+    <div class="card">
+      <h2>Attendance (Last 7 Days)</h2>
+      <canvas id="attChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <script>
+    async function fetchJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed ' + url);
+      return res.json();
+    }
+
+    function randomColors(n) {
+      const colors = [];
+      for (let i=0;i<n;i++) {
+        const h = Math.floor(360*Math.random());
+        colors.push(`hsl(${h} 70% 55%)`);
+      }
+      return colors;
+    }
+
+    async function init() {
+      // Dept chart
+      const dep = await fetchJSON('/charts/employees-per-department/');
+      const depCtx = document.getElementById('deptChart').getContext('2d');
+      new Chart(depCtx, {
+        type: 'bar',
+        data: {
+          labels: dep.labels,
+          datasets: [{
+            label: 'Employees',
+            data: dep.values,
+            backgroundColor: '#4F46E5'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+
+      // Attendance chart
+      const att = await fetchJSON('/charts/attendance-last-7-days/');
+      const colors = randomColors(att.labels.length);
+      const attCtx = document.getElementById('attChart').getContext('2d');
+      new Chart(attCtx, {
+        type: 'pie',
+        data: {
+          labels: att.labels,
+          datasets: [{
+            label: 'Count',
+            data: att.values,
+            backgroundColor: colors
+          }]
+        },
+        options: { responsive: true }
+      });
+    }
+
+    init().catch(err => console.error(err));
+  </script>
+</body>
+</html>
