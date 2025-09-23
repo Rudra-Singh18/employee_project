@@ -118,7 +118,7 @@ Common issues-
 
     CORS for local frontend: install django-cors-headers, add CorsMiddleware, and set CORS_ALLOWED_ORIGINS=['http://localhost:3000'].
 
-Deployment notes (summary)
+Deployment notes 
 
     Set DEBUG=False and add the domain to ALLOWED_HOSTS.
 
