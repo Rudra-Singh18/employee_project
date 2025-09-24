@@ -1,5 +1,5 @@
 Employee Management API-
-
+ 
     Simple Django REST API for Departments, Employees, Attendance, and Performance with token auth, filters/search/ordering, Swagger docs, and a small charts dashboard. Open the docs at /swagger/ and /redoc/, and the dashboard at /charts/.
 
 Quick start-
