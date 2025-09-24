@@ -11,7 +11,6 @@ class AttendanceViewSet(viewsets.ModelViewSet):
     filterset_fields = ['status', 'date', 'employee']
     ordering_fields = ['date', 'id']
 
-
     def create(self, request, *args, **kwargs):
         employee_id = request.data.get('employee_id')
         try:
